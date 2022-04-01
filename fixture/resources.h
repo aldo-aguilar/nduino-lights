@@ -2,34 +2,43 @@
 #define RESOURCES_H
 #endif
 
-#include <FastLED.h>
+#define DATA_PIN_FIXTURE1 1
+#define DATA_PIN_FIXTURE2 2
+#define DATA_PIN_FIXTURE3 3 
+#define DATA_PIN_FIXTURE4 4
+#define DATA_PIN_FIXTURE5 5  
+#define DATA_PIN_FIXTURE6 6 
+#define DATA_PIN_FIXTURE7 7 
+#define DATA_PIN_FIXTURE8 8 
+#define DATA_PIN_FIXTURE9 9 
+#define DATA_PIN_FIXTURE10 10 
+#define DATA_PIN_FIXTURE11 11
+#define DATA_PIN_FIXTURE12 12
+#define DATA_PIN_FIXTURE13 13
 
-#define DATA_PIN 5
 #define CLOCK_PIN 13
 
-// number of lights in LED strip
-#define NUM_LEDS 60
-
-// array of LEDS
-CRGB leds[NUM_LEDS];
+#define NUM_LEDS_FIXTURE1 60
+#define NUM_LEDS_FIXTURE2 150 
 
 //
 int board_delay = 100;
 
 //-------------------------- utility functions ------------------------
 
-bool within_bounds(int curr_idx){
-  return (curr_idx >= 0 && curr_idx < NUM_LEDS);
+bool within_bounds(int curr_idx, int num_leds){
+  return (curr_idx >= 0 && curr_idx < num_leds);
 }
 
 template <typename T> int sgn(T val) {
     return (T(0) < val) - (val < T(0));
 }
 
-void fill_leds(int r, int g, int b){
-  for (int i = NUM_LEDS; i > 0; i--) {
+void fill_leds(int r, int g, int b, CRGB* leds, int num_leds){
+  for (CRGB* i = leds; i < leds + num_leds; i++) {
+    Serial.print("fill leds\n");
     // Now turn the LED off, then pause
-    leds[i] = CRGB(r, g, b);
+    *i = CRGB(r, g, b);
   }
   FastLED.show();
 }
