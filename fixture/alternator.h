@@ -2,35 +2,32 @@
 #define ALTERNATOR_H
 #endif
 
-class Alternator{
+class Alternator : public LightObject{
 public:
-  Alternator(CRGB color0, CRGB color1){
-    m_color0 = color0;
-    m_color1 = color1;
+  Alternator(CRGB color, CRGB* leds, int num_leds){
+    m_color = color;
+    m_num_leds = num_leds;
+    m_leds = leds;
+    
   }
 
   void _update(){
-    CRGB temp = m_color0;
-    m_color0 = m_color1;
-    m_color1 = temp;
+    CRGB temp = m_color;
+    m_color = m_alt_color;
+    m_alt_color = temp;
   }
-  
+
   void draw(){
-    for (int i = 0; i < NUM_LEDS; i++) {
-      Serial.print(i);
+    for (int i = 0; i < m_num_leds; i++) {
       if (i % 2 == 0)
-        leds[i] = m_color0;
+        m_leds[i] = m_color;
       else
-        leds[i] = m_color1; 
+        m_leds[i] = m_alt_color; 
     }
     _update();
     FastLED.show();
   }
 
 private:
-  int head_idx;
-  int tail_length;
-  int start_pos;
-  CRGB m_color0;
-  CRGB m_color1;
+  int m_alt_color {CRGB(0, 0, 0)};
 };

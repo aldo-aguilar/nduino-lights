@@ -35,10 +35,9 @@ template <typename T> int sgn(T val) {
 }
 
 void fill_leds(int r, int g, int b, CRGB* leds, int num_leds){
-  for (CRGB* i = leds; i < leds + num_leds; i++) {
-    Serial.print("fill leds\n");
-    // Now turn the LED off, then pause
-    *i = CRGB(r, g, b);
+
+  for (int i = 0; i < num_leds; i++) {
+    leds[i] = CRGB(r, g, b);
   }
   FastLED.show();
 }

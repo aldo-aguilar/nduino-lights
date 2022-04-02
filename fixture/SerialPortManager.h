@@ -8,8 +8,8 @@
 
 class SerialPortManager {
 public:
-    SerialPortManager(Snake* snake) {
-        m_snake = snake;
+    SerialPortManager(std::vector<LightObject*> light_objs) {
+      m_lighting_objs = light_objs;
     }
 
     void setup () {
@@ -17,7 +17,16 @@ public:
     }
 
     void draw () {
-        m_snake->draw();
+        for (LightObject* light_obj : m_lighting_objs) {
+          light_obj->draw();
+        }
+    }
+
+    void update_color(int r, int g, int b) {
+        for (LightObject* light_obj : m_lighting_objs) {
+          Serial.print("updating colors...\n");
+          light_obj->update_color(r, g, b);
+        }
     }
 
     void handle_serial_message() {
@@ -34,10 +43,8 @@ public:
             switch (m_current_header)
             {
             case COLOR_MODE:
-
                 while(Serial.available() > 0) { // && msg != '\n'
                     curr_msg = Serial.read();
-                    
                     while (curr_msg != ',' && curr_msg != '!') {
                       if(curr_msg >= '0' && curr_msg <= '9') {
                         Serial.println((int)(curr_msg - '0'));
@@ -51,11 +58,11 @@ public:
                   
                  }
 
-                m_snake->update_color(rgb_vals[0], rgb_vals[1], rgb_vals[2]);
+                update_color(rgb_vals[0], rgb_vals[1], rgb_vals[2]);
                 break;
                 
               case 'u':
-                m_snake->draw();
+                draw();
                 break;
             }
             Serial.print('\n');
@@ -63,6 +70,6 @@ public:
 }
 
 private:
-    Snake* m_snake;
     char m_current_header {0};
+    std::vector<LightObject*> m_lighting_objs;
 };
