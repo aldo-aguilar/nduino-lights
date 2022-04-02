@@ -24,6 +24,19 @@
 //
 int board_delay = 100;
 
+// serial port message codes
+#define COLOR_MODE 'c'
+#define PATTERN_MODE 'p'
+#define UPDATE_MODE 'u'
+
+struct SPMsg {
+  char type;
+  bool status {false}; // status to indicate if a msg has been fully parsed
+  int field1;
+  int field2;
+  int field3;
+};
+
 //-------------------------- utility functions ------------------------
 
 bool within_bounds(int curr_idx, int num_leds){
@@ -35,7 +48,6 @@ template <typename T> int sgn(T val) {
 }
 
 void fill_leds(int r, int g, int b, CRGB* leds, int num_leds){
-
   for (int i = 0; i < num_leds; i++) {
     leds[i] = CRGB(r, g, b);
   }

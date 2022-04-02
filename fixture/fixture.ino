@@ -2,31 +2,31 @@
 #include <FastLED.h>
 #include <vector> 
 
+#include "resources.h"
 #include "fixture.h"
 
 #include "alternator.h"
-// #include "lfo.h"
-#include "resources.h"
+#include "lfo.h"
 #include "snake.h"
-#include "SerialPortManager.h"
+
+// TODO (maybe): move this all into a setup file, and if you have time add a config 
+// TODO (maybe): file to fill out fields maybe?
 
 // vector of all lighting objects
 std::vector<LightObject*> light_objs;
 
 // initalize panels and lighting objects for this fixture
 CRGB* object1_leds = new CRGB[NUM_LEDS_FIXTURE1];
-Snake* light_obj1 = new Snake(0, 20, object1_leds, NUM_LEDS_FIXTURE1);
-// Alternator* light_obj1 = new Alternator(CRGB(0, 255, 0), object1_leds, NUM_LEDS_FIXTURE1);
-
+LightObject* light_obj1 = new Snake(0, 20, object1_leds, NUM_LEDS_FIXTURE1);
 
 CRGB* object2_leds = new CRGB[NUM_LEDS_FIXTURE2];
-// Snake* light_obj2 = new Snake(0, 20, object2_leds, NUM_LEDS_FIXTURE2);
-Alternator* light_obj2 = new Alternator(CRGB(255, 0, 0), object2_leds, NUM_LEDS_FIXTURE2);
-
-
+LightObject* light_obj2 = new Alternator(CRGB(255, 0, 0), object2_leds, NUM_LEDS_FIXTURE2);
 
 // global serial port manager 
-SerialPortManager spm(light_objs);
+// TODO: this is being declared here with the empty vec because I don't have a 
+// TODO: empty contructor written. I would like to do this a better way
+// TODO: instead of just re-declaring it 
+FixtureManager fixture(light_objs);
 
 void setup() { 
   // initalize all data pins and led arrays for each fixture
@@ -38,8 +38,7 @@ void setup() {
   light_objs.push_back(light_obj2);
 
   // initalize the serial port manager and call setup
-  spm = SerialPortManager(light_objs);    
-  spm.setup();
+  fixture = FixtureManager(light_objs);    
   
   fill_leds(0, 0, 0, object1_leds, NUM_LEDS_FIXTURE1);
   fill_leds(0, 0, 0, object2_leds, NUM_LEDS_FIXTURE2);
@@ -47,10 +46,10 @@ void setup() {
 
 void serialEvent() {
 //  spm.draw();
- spm.handle_serial_message();
+ fixture.handle_serial_message();
 }
 
 void loop() { 
   delay(board_delay);
-  spm.draw();
+  fixture.draw();
 }
