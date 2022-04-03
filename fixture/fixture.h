@@ -2,8 +2,9 @@
 #define FIXTURE_H
 #endif
 
-#include "SerialPortManager.h"
+class FixtureManager;
 
+// abstract base class of lighting objects effects
 class LightObject {
 public:
     virtual void draw();
@@ -23,48 +24,138 @@ protected:
     int m_num_leds;
 };
 
+// parses incoming messages for fixture class, and will 
+// handle sending out any data needed
+class SerialPortManager {
+friend FixtureManager;
+public:
+    SerialPortManager() {}
+
+    void setup () {
+      Serial.begin(SERIAL_BAUD);
+    }
+
+    void reset_msg() {
+      m_msg_pos = 0;
+      
+      // clear out message struct to prevent overflow
+      for(int i = 0; i < MAX_MSG_LEN; i++) {
+        m_spmsg.data[i] = 0;
+      }
+    }
+
+    bool handle_serial_message() {
+      while (Serial.available() > 0) {
+        char curr_byte = Serial.read();
+
+        // still getting data for message
+        if(curr_byte != '\n' && (m_msg_pos < MAX_MSG_LEN - 1)) {
+          // we add this in case of an issues with messages overlapping
+          if (m_msg_pos == 0 && !isAlpha(curr_byte)){
+            reset_msg();
+          }
+          else{
+            m_current_msg[m_msg_pos] = curr_byte;
+            m_msg_pos++;
+          }
+        }
+        
+        // terminating character detected 
+        else {
+          parse_message();
+          return true;
+        }
+      }
+
+      return false;
+    }
+
+
+
+    void parse_message(){
+      int data_idx = 0;
+
+      switch (m_current_msg[0]) {
+
+        case COLOR_MODE:
+          m_spmsg.type = COLOR_MODE;
+
+          for(int i = 1; i < MAX_MSG_LEN; i++) {
+            char curr_char = m_current_msg[i]; 
+
+            if(curr_char >= '0' && curr_char <= '9') {
+              m_spmsg.data[data_idx] = (m_spmsg.data[data_idx] * 10) + (int)(curr_char - '0');
+            }
+            else{
+              data_idx++;
+            }
+          }
+        break;
+        
+      case UPDATE_MODE:
+        m_spmsg.type = UPDATE_MODE;
+        break;
+    }
+  }
+
+private:
+    char m_current_header {0};
+    char m_current_msg[MAX_MSG_LEN];
+    unsigned int m_msg_pos {0};
+    SPMsg m_spmsg;
+};
+
+// fixture manager, main class that scripting code needs to interact with
 class FixtureManager { 
 public:
     FixtureManager(std::vector<LightObject*> light_objs) 
         : m_lighting_objs(light_objs) {
-            m_sp_man.setup();
-        }
-    
+            m_spm.setup();
+    }
+
+    void clear() {
+        std::for_each(m_lighting_objs.begin(), 
+                m_lighting_objs.end(),
+                [](LightObject* lo ){ lo->clear(); });
+    }
+
     void draw () {
-        for (LightObject* light_obj : m_lighting_objs) {
-          light_obj->draw();
+        std::for_each(m_lighting_objs.begin(), 
+                        m_lighting_objs.end(),
+                        [](LightObject* lo ){ lo->draw(); });
+    }
+
+    void handle_serial_message() {
+        // status of serial port message being written to managers field 
+        bool sp_msg_status = m_spm.handle_serial_message();
+
+        if (sp_msg_status) {
+          switch (m_spm.m_spmsg.type) {            
+  
+            case COLOR_MODE:  
+              update_color(m_spm.m_spmsg.data[0], m_spm.m_spmsg.data[1], m_spm.m_spmsg.data[2]);
+              break;
+  
+             case UPDATE_MODE:
+               draw();
+               break;
+          }
+          
+          m_spm.reset_msg();
         }
     }
 
     void update_color(int r, int g, int b) {
-        for (LightObject* light_obj : m_lighting_objs) {
-          light_obj->update_color(r, g, b);
-        }
-    }
-
-    void handle_serial_message() {
-        // this is a wrapper method from the serial port manager 
-        // this will check that a message has been fully parsed
-        // and if so it will handle each case calling the proper 
-        // method
-        // TODO: is this code redundant? I think the wrapper makes
-        // TODO: sense in this case but let me know what you think
-        SPMsg current_msg = m_sp_man.handle_serial_message();
-
-        if (current_msg.status) {
-            switch (current_msg.type){
-                case COLOR_MODE:
-                    update_color(current_msg.field1, current_msg.field2, current_msg.field3);
-                    break;
-
-                case UPDATE_MODE:
-                    draw();
-                    break;
-            }
-        }
+        r = std::min(r, 255);
+        g = std::min(g, 255);
+        b = std::min(b, 255);
+        
+        std::for_each(m_lighting_objs.begin(), 
+                m_lighting_objs.end(),
+                [=](LightObject* lo ){ lo->update_color(r, g, b); });
     }
 
 private:
     std::vector<LightObject*> m_lighting_objs;
-    SerialPortManager m_sp_man {SerialPortManager()};
+    SerialPortManager m_spm {SerialPortManager()};
 };

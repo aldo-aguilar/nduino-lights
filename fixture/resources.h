@@ -2,39 +2,48 @@
 #define RESOURCES_H
 #endif
 
-#define DATA_PIN_FIXTURE1 1
-#define DATA_PIN_FIXTURE2 2
-#define DATA_PIN_FIXTURE3 3 
-#define DATA_PIN_FIXTURE4 4
-#define DATA_PIN_FIXTURE5 5  
-#define DATA_PIN_FIXTURE6 6 
-#define DATA_PIN_FIXTURE7 7 
-#define DATA_PIN_FIXTURE8 8 
-#define DATA_PIN_FIXTURE9 9 
-#define DATA_PIN_FIXTURE10 10 
-#define DATA_PIN_FIXTURE11 11
-#define DATA_PIN_FIXTURE12 12
-#define DATA_PIN_FIXTURE13 13
+#include <ArduinoSTL.h>
+#include <FastLED.h>
+#include <utility>
+#include <vector> 
 
-#define CLOCK_PIN 13
+// potential data pins for lighting objects
+#define DATA_PIN_LIGHTOBJ1 1
+#define DATA_PIN_LIGHTOBJ2 2
+#define DATA_PIN_LIGHTOBJ3 3 
+#define DATA_PIN_LIGHTOBJ4 4
+#define DATA_PIN_LIGHTOBJ5 5  
+#define DATA_PIN_LIGHTOBJ6 6 
+#define DATA_PIN_LIGHTOBJ7 7 
+#define DATA_PIN_LIGHTOBJ8 8 
+#define DATA_PIN_LIGHTOBJ9 9 
+#define DATA_PIN_LIGHTOBJ10 10 
+#define DATA_PIN_LIGHTOBJ11 11
+#define DATA_PIN_LIGHTOBJ12 12
+#define DATA_PIN_LIGHTOBJ13 13
 
+// number of LEDs corresponding to the fixtures data pin
 #define NUM_LEDS_FIXTURE1 60
 #define NUM_LEDS_FIXTURE2 150 
 
-//
+// delay in MS this is just for testing, no delay should 
+// be set durning a real performance 
 int board_delay = 100;
 
 // serial port message codes
+
+#define SERIAL_BAUD 9600
+
 #define COLOR_MODE 'c'
 #define PATTERN_MODE 'p'
 #define UPDATE_MODE 'u'
 
+#define MAX_MSG_LEN 24
+#define MAX_MSG_PARAMETERS 3
+
 struct SPMsg {
   char type;
-  bool status {false}; // status to indicate if a msg has been fully parsed
-  int field1;
-  int field2;
-  int field3;
+  int data[MAX_MSG_PARAMETERS] {0};
 };
 
 //-------------------------- utility functions ------------------------

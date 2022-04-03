@@ -1,7 +1,3 @@
-#include <ArduinoSTL.h>
-#include <FastLED.h>
-#include <vector> 
-
 #include "resources.h"
 #include "fixture.h"
 
@@ -30,8 +26,8 @@ FixtureManager fixture(light_objs);
 
 void setup() { 
   // initalize all data pins and led arrays for each fixture
-  FastLED.addLeds<NEOPIXEL, DATA_PIN_FIXTURE5>(object1_leds, NUM_LEDS_FIXTURE1);  
-  FastLED.addLeds<NEOPIXEL, DATA_PIN_FIXTURE7>(object2_leds, NUM_LEDS_FIXTURE2); 
+  FastLED.addLeds<NEOPIXEL, DATA_PIN_LIGHTOBJ5>(object1_leds, NUM_LEDS_FIXTURE1);  
+  FastLED.addLeds<NEOPIXEL, DATA_PIN_LIGHTOBJ7>(object2_leds, NUM_LEDS_FIXTURE2); 
 
   // push all lighting objects to the lighting object vector
   light_objs.push_back(light_obj1);
@@ -40,8 +36,7 @@ void setup() {
   // initalize the serial port manager and call setup
   fixture = FixtureManager(light_objs);    
   
-  fill_leds(0, 0, 0, object1_leds, NUM_LEDS_FIXTURE1);
-  fill_leds(0, 0, 0, object2_leds, NUM_LEDS_FIXTURE2);
+  fixture.clear();
 }
 
 void serialEvent() {
