@@ -37,14 +37,19 @@ void setup() {
   fixture = FixtureManager(light_objs);    
   
   fixture.clear();
+
+  // recover time
+  delay(RECOVER_TIME);
 }
 
 void serialEvent() {
 //  spm.draw();
- fixture.handle_serial_message();
+  while (Serial.available()){
+    fixture.handle_serial_message();
+  }
 }
 
 void loop() { 
-  delay(board_delay);
+//  delay(board_delay);
   fixture.draw();
 }

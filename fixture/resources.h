@@ -4,6 +4,7 @@
 
 #include <ArduinoSTL.h>
 #include <FastLED.h>
+#include <stack>
 #include <utility>
 #include <vector> 
 
@@ -26,13 +27,15 @@
 #define NUM_LEDS_FIXTURE1 60
 #define NUM_LEDS_FIXTURE2 150 
 
+#define RECOVER_TIME 3000
+
 // delay in MS this is just for testing, no delay should 
 // be set durning a real performance 
 int board_delay = 100;
 
 // serial port message codes
 
-#define SERIAL_BAUD 9600
+#define SERIAL_BAUD 1200
 
 #define COLOR_MODE 'c'
 #define PATTERN_MODE 'p'
@@ -41,10 +44,8 @@ int board_delay = 100;
 #define MAX_MSG_LEN 24
 #define MAX_MSG_PARAMETERS 3
 
-struct SPMsg {
-  char type;
-  int data[MAX_MSG_PARAMETERS] {0};
-};
+#define MSG_START '<';
+#define MSG_END   = '>';
 
 //-------------------------- utility functions ------------------------
 
@@ -60,5 +61,4 @@ void fill_leds(int r, int g, int b, CRGB* leds, int num_leds){
   for (int i = 0; i < num_leds; i++) {
     leds[i] = CRGB(r, g, b);
   }
-  FastLED.show();
 }

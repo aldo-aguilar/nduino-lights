@@ -40,7 +40,6 @@ public:
     if (within_bounds(head_idx - tail_length, m_num_leds)){
       m_leds[head_idx - tail_length] = CRGB(0, 0, 0);
     }
-    FastLED.show();
     _update();
   }
 

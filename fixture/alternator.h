@@ -11,24 +11,15 @@ public:
     m_leds = leds;
   }
 
-  void _update() {
-    // swap 2 colors to alternate 
-    CRGB temp = m_color;
-    m_color = m_alt_color;
-    m_alt_color = temp;
-  }
-
   void draw() {
     for (int i = 0; i < m_num_leds; i++) {
-      if (i % 2 == 0)
-        m_leds[i] = m_color;
+      if (m_leds[i] == m_color)
+        m_leds[i] = m_alt_color;
       else
-        m_leds[i] = m_alt_color; 
+        m_leds[i] = m_color; 
     }
-    _update();
-    FastLED.show();
   }
 
 private:
-  int m_alt_color {CRGB(0, 0, 0)};
+  CRGB m_alt_color {CRGB(0, 0, 0)};
 };
