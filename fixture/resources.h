@@ -1,12 +1,13 @@
 #ifndef RESOURCES_H
 #define RESOURCES_H
 #endif
+#include <OSCMessage.h>
+#include <OSCBundle.h>
+#include <OSCData.h>
 
 #include <ArduinoSTL.h>
 #include <FastLED.h>
-#include <stack>
 #include <utility>
-#include <vector> 
 
 // potential data pins for lighting objects
 #define DATA_PIN_LIGHTOBJ1 1
@@ -45,7 +46,7 @@ int board_delay = 100;
 #define MAX_MSG_PARAMETERS 3
 
 #define MSG_START '<';
-#define MSG_END   = '>';
+#define MSG_END   '>';
 
 //-------------------------- utility functions ------------------------
 
