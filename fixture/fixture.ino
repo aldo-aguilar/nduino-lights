@@ -23,10 +23,10 @@ std::vector<LightObject*> light_objs;
 
 // initalize panels and lighting objects for this fixture
 CRGB* object1_leds = new CRGB[NUM_LEDS_FIXTURE1];
-LightObject* light_obj1 = new TwoSideFill(CRGB(255, 255, 0), object1_leds, NUM_LEDS_FIXTURE1);
+LightObject* light_obj1 = new TwoSideFill(CRGB(100, 25, 5), object1_leds, NUM_LEDS_FIXTURE1);
 
 CRGB* object2_leds = new CRGB[NUM_LEDS_FIXTURE2];
-LightObject* light_obj2 = new TwoSideFill(CRGB(255, 0, 0), object2_leds, NUM_LEDS_FIXTURE2);
+LightObject* light_obj2 = new TwoSideFill(CRGB(25, 100, 0), object2_leds, NUM_LEDS_FIXTURE2);
 
 // global serial port manager 
 // TODO: this is being declared here with the empty vec because I don't have a 
@@ -90,6 +90,6 @@ void serialEvent() {
 }
 
 void loop() { 
-//  delay(board_delay);
+  delay(board_delay);
   fixture.draw();
 }
