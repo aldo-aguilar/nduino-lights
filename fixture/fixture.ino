@@ -23,10 +23,10 @@ std::vector<LightObject*> light_objs;
 
 // initalize panels and lighting objects for this fixture
 CRGB* object1_leds = new CRGB[NUM_LEDS_FIXTURE1];
-LightObject* light_obj1 = new TwoSideFill(CRGB(255, 255, 0), object1_leds, NUM_LEDS_FIXTURE1);
-
-CRGB* object2_leds = new CRGB[NUM_LEDS_FIXTURE2];
-LightObject* light_obj2 = new TwoSideFill(CRGB(255, 0, 0), object2_leds, NUM_LEDS_FIXTURE2);
+LightObject* light_obj1 = new Snake(CRGB(20, 20, 10), object1_leds, NUM_LEDS_FIXTURE1);
+//
+//CRGB* object2_leds = new CRGB[NUM_LEDS_FIXTURE2];
+//LightObject* light_obj2 = new TwoSideFill(CRGB(20, 20, 10), object2_leds, NUM_LEDS_FIXTURE2);
 
 // global serial port manager 
 // TODO: this is being declared here with the empty vec because I don't have a 
@@ -34,14 +34,16 @@ LightObject* light_obj2 = new TwoSideFill(CRGB(255, 0, 0), object2_leds, NUM_LED
 // TODO: instead of just re-declaring it 
 FixtureManager fixture(light_objs);
 
-void setup() { 
+void setup() {
+  Serial.begin(SERIAL_BAUD);
+   
   // initalize all data pins and led arrays for each fixture
   FastLED.addLeds<NEOPIXEL, DATA_PIN_LIGHTOBJ5>(object1_leds, NUM_LEDS_FIXTURE1);  
-  FastLED.addLeds<NEOPIXEL, DATA_PIN_LIGHTOBJ7>(object2_leds, NUM_LEDS_FIXTURE2); 
+//  FastLED.addLeds<NEOPIXEL, DATA_PIN_LIGHTOBJ7>(object2_leds, NUM_LEDS_FIXTURE2); 
 
   // push all lighting objects to the lighting object vector
   light_objs.push_back(light_obj1);
-  light_objs.push_back(light_obj2);
+//  light_objs.push_back(light_obj2);
 
   // initalize the serial port manager and call setup
   fixture = FixtureManager(light_objs);    
@@ -53,43 +55,33 @@ void setup() {
 }
 
 void OSCMsgReceive(){
-  OSCMessage msg;
-  
+  OSCBundle bundle;
    
    while(!SLIPSerial.endofPacket()){
     int size = SLIPSerial.available();
+    
     if (size > 0){
       //fill the msg with all of the available bytes
       while(size--){
-        msg.fill(SLIPSerial.read());
+        byte current_byte = SLIPSerial.read();
+        bundle.fill(current_byte);
       }
     }
   }
-    
-  if(!msg.hasError()){
-    msg.route("/test", test);
-    msg.route("/vest", vest);
+  
+  if(!bundle.hasError()){
+    bundle.dispatch("/color", color_mode);
   }
-
 }
 
-void test(OSCMessage& msg, int addressOffset) {
-  return;
-}
-
-void vest(OSCMessage& msg, int addressOffset) {
-  return;
+void color_mode(OSCMessage& msg) {
+  fixture.update_color(msg.getInt(0), msg.getInt(1), msg.getInt(2));
 }
 
 void serialEvent() {
   OSCMsgReceive();
-//  spm.draw();
-//  while (Serial.available()){
-//    fixture.handle_serial_message();
-//  }
 }
 
 void loop() { 
-//  delay(board_delay);
   fixture.draw();
 }
