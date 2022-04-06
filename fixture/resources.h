@@ -36,7 +36,7 @@ int board_delay = 100;
 
 // serial port message codes
 
-#define SERIAL_BAUD 1200
+#define SERIAL_BAUD 115200
 
 #define COLOR_MODE 'c'
 #define PATTERN_MODE 'p'

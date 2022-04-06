@@ -23,7 +23,7 @@ std::vector<LightObject*> light_objs;
 
 // initalize panels and lighting objects for this fixture
 CRGB* object1_leds = new CRGB[NUM_LEDS_FIXTURE1];
-LightObject* light_obj1 = new Snake(CRGB(20, 20, 10), object1_leds, NUM_LEDS_FIXTURE1);
+LightObject* light_obj1 = new Snake(0, 5, object1_leds, NUM_LEDS_FIXTURE1);
 //
 //CRGB* object2_leds = new CRGB[NUM_LEDS_FIXTURE2];
 //LightObject* light_obj2 = new TwoSideFill(CRGB(20, 20, 10), object2_leds, NUM_LEDS_FIXTURE2);
@@ -56,7 +56,9 @@ void setup() {
 
 void OSCMsgReceive(){
   OSCBundle bundle;
-   
+  // TODO: this is pausing the program, we want to buffer messages so that
+  // serial writes don't wait until the end of a package, they should wait 
+  // until the full message has come in
    while(!SLIPSerial.endofPacket()){
     int size = SLIPSerial.available();
     
