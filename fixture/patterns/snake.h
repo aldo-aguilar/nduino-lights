@@ -2,7 +2,7 @@
 #define SNAKE_H
 #endif
 
-class Snake : public LightObject{
+class Snake : public LightObjectPattern{
 public:
   Snake(int _start_pos, int _tail_length, CRGB* leds, int num_leds){
       m_num_leds = num_leds;

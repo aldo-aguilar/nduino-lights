@@ -5,17 +5,16 @@
 class FixtureManager;
 
 // abstract base class of lighting objects effects
-class LightObject {
+class LightObjectPattern {
 public:
     virtual void draw();
-
-    void clear(){
-        fill_leds(0, 0, 0, m_leds, m_num_leds);
+    
+    void fill(CRGB new_color){
+        fill_solid(m_leds, m_num_leds, new_color); // this keeps crashing for me
     }
     
-    void update_color(int r, int g, int b){
+    virtual void update_color(int r, int g, int b){
         m_color = CRGB(r, g, b);
-        return; 
     }
     
 protected:
@@ -27,33 +26,32 @@ protected:
 // fixture manager, main class that scripting code needs to interact with
 class FixtureManager { 
 public:
-    FixtureManager(std::vector<LightObject*> light_objs) 
+
+    FixtureManager() {}
+
+    FixtureManager(std::vector<LightObjectPattern*> light_objs) 
         : m_lighting_objs(light_objs) {}
 
-    void clear() {
+    void fill(CRGB new_color) {
         std::for_each(m_lighting_objs.begin(), 
                 m_lighting_objs.end(),
-                [](LightObject* lo ){ lo->clear(); });
+                [=](LightObjectPattern* lo ){ lo->fill(new_color); });
         FastLED.show();
     }
 
     void draw () {
         std::for_each(m_lighting_objs.begin(), 
                         m_lighting_objs.end(),
-                        [](LightObject* lo ){ lo->draw(); });
+                        [](LightObjectPattern* lo ){ lo->draw(); });
         FastLED.show();
     }
 
     void update_color(int r, int g, int b) {
-        r = std::min(r, 255);
-        g = std::min(g, 255);
-        b = std::min(b, 255);
-        
         std::for_each(m_lighting_objs.begin(), 
                 m_lighting_objs.end(),
-                [=](LightObject* lo ){ lo->update_color(r, g, b); });
+                [=](LightObjectPattern* lo ){ lo->update_color(r, g, b); });
     }
 
 private:
-    std::vector<LightObject*> m_lighting_objs;
+    std::vector<LightObjectPattern*> m_lighting_objs;
 };
