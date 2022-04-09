@@ -2,7 +2,7 @@
 #define SNAKE_H
 #endif
 
-class Snake : public LightObject{
+class Snake : public LightObjectPattern{
 public:
   Snake(int _start_pos, int _tail_length, CRGB* leds, int num_leds){
       m_num_leds = num_leds;
@@ -40,7 +40,6 @@ public:
     if (within_bounds(head_idx - tail_length, m_num_leds)){
       m_leds[head_idx - tail_length] = CRGB(0, 0, 0);
     }
-    FastLED.show();
     _update();
   }
 
