@@ -11,7 +11,10 @@ std::vector<LightObjectPattern*> light_objs;
 CRGB* object1_leds = new CRGB[NUM_LEDS_FIXTURE1];
 LightObjectPattern* light_obj1 = new Alternator(object1_leds,
                                           NUM_LEDS_FIXTURE1,
-                                          {CRGB::Blue, CRGB::Black, CRGB::Green, CRGB::Black}); // if I add red to this list the prgoram crashes? 
+                                          CHSV_TESTV);
+
+// LightObjectPattern* light_obj1 = new Snake(0, 20, object1_leds, NUM_LEDS_FIXTURE1);
+
 
 FixtureManager fixture;
 
@@ -27,7 +30,8 @@ void setup() {
  
   fixture = FixtureManager(light_objs);    
   
-  fixture.fill(CRGB::Black);
+  fixture.fill(CHSV(0, 0, 0));
+
   delay(RECOVER_TIME);
 }
 
@@ -56,7 +60,7 @@ void OSCMsgReceive(){
 }
 
 void color_mode(OSCMessage& msg) {
-  fixture.update_color(msg.getInt(0), msg.getInt(1), msg.getInt(2));
+  fixture.update_hsv(CHSV(msg.getInt(0), msg.getInt(1), msg.getInt(2)));
 }
 
 void serialEvent() {

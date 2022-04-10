@@ -47,6 +47,25 @@ SLIPEncodedSerial SLIPSerial(Serial);
 // serial port & osc message codes
 #define SERIAL_BAUD 9600
 
+// CHSV color defintions
+CHSV CHSV_RED = CHSV(0, 255, 255);
+CHSV CHSV_ORANGE = CHSV(32, 255, 255);
+CHSV CHSV_YELLOW = CHSV(64, 255, 255);
+CHSV CHSV_GREEN = CHSV(96, 255, 255);
+CHSV CHSV_AQUA = CHSV(128, 255, 255);
+CHSV CHSV_BLUE = CHSV(160, 255, 255);
+CHSV CHSV_PURPLE = CHSV(192, 255, 255);
+CHSV CHSV_PINK = CHSV(224, 255, 255);
+
+std::vector<CHSV> CHSV_TESTV{CHSV_RED, 
+                             CHSV_ORANGE, 
+                             CHSV_YELLOW, 
+                             CHSV_GREEN, 
+                             CHSV_AQUA, 
+                             CHSV_BLUE, 
+                             CHSV_PURPLE,
+                             CHSV_PINK};
+
 //-------------------------- utility functions ------------------------
 
 bool within_bounds(int curr_idx, int num_leds){

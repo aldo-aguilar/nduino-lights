@@ -7,10 +7,12 @@ public:
   Snake(int _start_pos, int _tail_length, CRGB* leds, int num_leds){
       m_num_leds = num_leds;
       m_leds = leds;
+      
       start_pos = _start_pos;
       head_idx = _start_pos; 
       tail_length = _tail_length;
-      m_color = CRGB(random(100, 255), random(100, 255), random(100, 255));
+
+      m_hsv = CHSV(random(100, 255), random(100, 255), random(100, 255));
   }
 
   void _update(){
@@ -18,27 +20,22 @@ public:
   }
   
   void draw() override{
-    int fade_scale = 255/(tail_length);
+    int fade_scale = 256/(tail_length);
     int fade_step = 0;
-
-    // color randomization    
-    // if (head_idx == 0) {
-    //   color = CRGB(random(0, 2)*255, random(0, 2)*255, random(0, 2)*255);
-    // }
 
     for (int curr_idx = head_idx; curr_idx > (head_idx - (tail_length));  curr_idx--){
       if (curr_idx == head_idx && within_bounds(curr_idx, m_num_leds)){
-        m_leds[curr_idx] = m_color;
+        m_leds[curr_idx] = m_hsv;
       }
 
       else if (within_bounds(curr_idx, m_num_leds)){
-        m_leds[curr_idx].subtractFromRGB(fade_scale);
+        m_leds[curr_idx].fadeLightBy(fade_scale);
       }
       fade_step++;
     }
     
     if (within_bounds(head_idx - tail_length, m_num_leds)){
-      m_leds[head_idx - tail_length] = CRGB(0, 0, 0);
+      m_leds[head_idx - tail_length] = CHSV(0, 0, 0);
     }
     _update();
   }

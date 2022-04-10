@@ -4,8 +4,8 @@
 // lighting object that alternates between 2 colors
 class TwoSideFill : public LightObjectPattern{
 public:
-  TwoSideFill(CRGB color, CRGB* leds, int num_leds) {
-    m_color = color;
+  TwoSideFill(CHSV hsv, CRGB* leds, int num_leds) {
+    m_hsv = hsv;
     m_num_leds = num_leds;
     m_leds = leds;
     m_frontside = 0;
@@ -14,12 +14,12 @@ public:
 
   void draw() {
     if (!m_reverse) {
-      m_leds[m_frontside] = m_color;
-      m_leds[m_backside] = m_color;
+      m_leds[m_frontside] = m_hsv;
+      m_leds[m_backside] = m_hsv;
     }
     else{
-      m_leds[m_frontside] = CRGB(0,0,0);
-      m_leds[m_backside] = CRGB(0,0,0);
+      m_leds[m_frontside] = CHSV(0,0,0);
+      m_leds[m_backside] = CHSV(0,0,0);
     }
     
     update_position();
@@ -41,7 +41,7 @@ public:
   }
 
 private:
-  CRGB m_alt_color {CRGB(0, 0, 0)};
+  CHSV m_alt_color {CHSV(0, 0, 0)};
   int m_frontside;
   int m_backside;
   bool m_reverse {false};
