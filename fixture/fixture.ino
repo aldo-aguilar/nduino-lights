@@ -1,30 +1,27 @@
 #include "resources.h"
 #include "fixture.h"
 #include "lfo.h"
-#include "patterns/alternator.h"
-#include "patterns/snake.h"
+#include "patterns/huewash.h"
+//#include "patterns/snake.h"
+#include "patterns/pulse.h"
 
 // vector of all lighting objects
 std::vector<LightObjectPattern*> light_objs;
 
 // initalize panels and lighting objects for this fixture
-CRGB* object1_leds = new CRGB[NUM_LEDS_FIXTURE1];
-LightObjectPattern* light_obj1 = new Alternator(object1_leds,
-                                          NUM_LEDS_FIXTURE1,
-                                          CHSV_TESTV);
-
-// LightObjectPattern* light_obj1 = new Snake(0, 20, object1_leds, NUM_LEDS_FIXTURE1);
+CRGB object1_leds[NUM_LEDS_FIXTURE1];
+LightObjectPattern* light_obj1 = new HueWash(object1_leds, NUM_LEDS_FIXTURE1);
 
 
 FixtureManager fixture;
-
+  
 void setup() {
   // start serial port at set baud rate
   Serial.begin(SERIAL_BAUD);
    
   // initalize all data pins and led arrays for each fixture,
   // push lighting objects onto global vector
-  FastLED.addLeds<NEOPIXEL, DATA_PIN_LIGHTOBJ5>(object1_leds, NUM_LEDS_FIXTURE1);  
+  FastLED.addLeds<WS2812B, DATA_PIN_LIGHTOBJ5, GRB>(object1_leds, NUM_LEDS_FIXTURE1);  
 
   light_objs.push_back(light_obj1);
  
@@ -37,14 +34,12 @@ void setup() {
 
 void OSCMsgReceive(){
   OSCBundle bundle;
-  
   // TODO: this is pausing the program, we want to buffer messages so that
   // serial writes don't wait until the end of a package, they should wait 
   // until the full message has come in
+  int size = SLIPSerial.available();
+  while(!SLIPSerial.endofPacket()){
   
-   while(!SLIPSerial.endofPacket()){
-    int size = SLIPSerial.available();
-    
     if (size > 0){
       //fill the msg with all of the available bytes
       while(size--){
@@ -52,10 +47,13 @@ void OSCMsgReceive(){
         bundle.fill(current_byte);
       }
     }
+    size = SLIPSerial.available();
   }
-  
   if(!bundle.hasError()){
     bundle.dispatch("/color", color_mode);
+  }
+  else{
+    Serial.println("error parsing OSC message");
   }
 }
 
@@ -68,6 +66,7 @@ void serialEvent() {
 }
 
 void loop() { 
-  delay(BOARD_DELAY); // debugging only
-  fixture.draw();
+  EVERY_N_MILLISECONDS(15){
+    fixture.draw();
+  }
 }

@@ -11,14 +11,10 @@ public:
     
     void fill(CHSV new_hsv){
         fill_solid(m_leds, m_num_leds, new_hsv); 
-
-        // for (int i = 0; i < m_num_leds; i++) {
-        //     m_leds[i] = new_hsv;
-        // }
     }
     
     virtual void update_hsv(CHSV new_hsv){
-        m_hsv= new_hsv;
+        m_hsv = new_hsv;
     }
     
 protected:
