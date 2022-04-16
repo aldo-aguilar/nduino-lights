@@ -13,7 +13,7 @@ public:
 
   void draw() {
     for(int i = 0; i < m_num_leds; i++) {
-        m_leds[i] = CHSV(hsv.h, 255, m_value);
+        m_leds[i] = CHSV(m_hsv.h, 255, m_value);
     }
     m_hue++; 
   }

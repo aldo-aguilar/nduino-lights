@@ -1,16 +1,15 @@
 #include "resources.h"
 #include "fixture.h"
-#include "lfo.h"
 #include "patterns/huewash.h"
-//#include "patterns/snake.h"
 #include "patterns/pulse.h"
+#include "patterns/singlepixel.h"
 
 // vector of all lighting objects
 std::vector<LightObjectPattern*> light_objs;
 
 // initalize panels and lighting objects for this fixture
 CRGB object1_leds[NUM_LEDS_FIXTURE1];
-LightObjectPattern* light_obj1 = new HueWash(object1_leds, NUM_LEDS_FIXTURE1);
+LightObjectPattern* light_obj1 = new SinglePixel(object1_leds, NUM_LEDS_FIXTURE1, CHSV_AQUA);
 
 
 FixtureManager fixture;
