@@ -24,6 +24,8 @@ public:
       if (current_pos >= 0 && current_pos <= m_head_idx - 1)
         m_leds[current_pos] = m_hsv;
     }
+    int tail_delete = (m_head_idx - m_tail_length) < 0 ? m_num_leds + (m_head_idx - m_tail_length) :  (m_head_idx - m_tail_length);
+    m_leds[tail_delete] = CHSV(0,0,0);
     update();
   }
 

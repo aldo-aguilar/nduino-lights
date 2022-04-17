@@ -34,7 +34,7 @@ SLIPEncodedSerial SLIPSerial(Serial);
 #define DATA_PIN_LIGHTOBJ13 13
 
 // number of LEDs corresponding to the fixtures data pin
-#define NUM_LEDS_FIXTURE1 106
+#define NUM_LEDS_FIXTURE1 60
 
 // delay in MS this is just for testing, no delay should 
 // be set durning a real performance 

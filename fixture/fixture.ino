@@ -1,8 +1,10 @@
 #include "resources.h"
 #include "fixture.h"
+//#include "lfo.h"
 #include "patterns/huewash.h"
 #include "patterns/pulse.h"
 #include "patterns/singlepixel.h"
+#include "patterns/snake.h"
 
 // vector of all lighting objects
 std::vector<LightObjectPattern*> light_objs;
