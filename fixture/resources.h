@@ -11,13 +11,13 @@
 #include <utility>
 #include <vector> 
 
-#ifdef BOARD_HAS_USB_SERIAL
-#include <SLIPEncodedUSBSerial.h>
-SLIPEncodedUSBSerial SLIPSerial( thisBoardsSerialUSB );
-#else
+//#ifdef BOARD_HAS_USB_SERIAL
+//#include <SLIPEncodedUSBSerial.h>
+//SLIPEncodedUSBSerial SLIPSerial( thisBoardsSerialUSB );
+//#else
 #include <SLIPEncodedSerial.h>
 SLIPEncodedSerial SLIPSerial(Serial);
-#endif
+//#endif
 
 // potential data pins for lighting objects
 #define DATA_PIN_LIGHTOBJ2 2
@@ -34,7 +34,7 @@ SLIPEncodedSerial SLIPSerial(Serial);
 #define DATA_PIN_LIGHTOBJ13 13
 
 // number of LEDs corresponding to the fixtures data pin
-#define NUM_LEDS_FIXTURE1 106
+#define NUM_LEDS_FIXTURE1 60
 
 // delay in MS this is just for testing, no delay should 
 // be set durning a real performance 
@@ -45,7 +45,24 @@ SLIPEncodedSerial SLIPSerial(Serial);
 #define RECOVER_TIME 3000
 
 // serial port & osc message codes
-#define SERIAL_BAUD 9600
+#define SERIAL_BAUD 115200
+
+// CHSV color defintions
+CHSV CHSV_ORANGE = CHSV(32, 255, 255);
+CHSV CHSV_YELLOW = CHSV(64, 255, 255);
+CHSV CHSV_GREEN = CHSV(96, 255, 255);
+CHSV CHSV_AQUA = CHSV(128, 255, 255);
+CHSV CHSV_BLUE = CHSV(160, 255, 255);
+CHSV CHSV_PURPLE = CHSV(192, 255, 255);
+CHSV CHSV_PINK = CHSV(224, 255, 255);
+
+std::vector<CHSV> CHSV_TESTV{CHSV_ORANGE, 
+                             CHSV_YELLOW, 
+                             CHSV_GREEN, 
+                             CHSV_AQUA, 
+                             CHSV_BLUE, 
+                             CHSV_PURPLE,
+                             CHSV_PINK};
 
 //-------------------------- utility functions ------------------------
 

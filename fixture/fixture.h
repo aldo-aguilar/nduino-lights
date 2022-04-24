@@ -9,16 +9,16 @@ class LightObjectPattern {
 public:
     virtual void draw();
     
-    void fill(CRGB new_color){
-        fill_solid(m_leds, m_num_leds, new_color); // this keeps crashing for me
+    void fill(CHSV new_hsv){
+        fill_solid(m_leds, m_num_leds, new_hsv); 
     }
     
-    virtual void update_color(int r, int g, int b){
-        m_color = CRGB(r, g, b);
+    virtual void update_hsv(CHSV new_hsv){
+        m_hsv = new_hsv;
     }
     
 protected:
-    CRGB m_color;
+    CHSV m_hsv;
     CRGB* m_leds;
     int m_num_leds;
 };
@@ -32,10 +32,10 @@ public:
     FixtureManager(std::vector<LightObjectPattern*> light_objs) 
         : m_lighting_objs(light_objs) {}
 
-    void fill(CRGB new_color) {
+    void fill(CHSV new_hsv) {
         std::for_each(m_lighting_objs.begin(), 
                 m_lighting_objs.end(),
-                [=](LightObjectPattern* lo ){ lo->fill(new_color); });
+                [=](LightObjectPattern* lo ){ lo->fill(new_hsv); });
         FastLED.show();
     }
 
@@ -46,10 +46,10 @@ public:
         FastLED.show();
     }
 
-    void update_color(int r, int g, int b) {
+    void update_hsv(CHSV new_hsv) {
         std::for_each(m_lighting_objs.begin(), 
                 m_lighting_objs.end(),
-                [=](LightObjectPattern* lo ){ lo->update_color(r, g, b); });
+                [=](LightObjectPattern* lo ){ lo->update_hsv(new_hsv); });
     }
 
 private:

@@ -4,47 +4,35 @@
 
 class Snake : public LightObjectPattern{
 public:
-  Snake(int _start_pos, int _tail_length, CRGB* leds, int num_leds){
-      m_num_leds = num_leds;
+  Snake(CRGB* leds, int num_leds, int tail_length){
       m_leds = leds;
-      start_pos = _start_pos;
-      head_idx = _start_pos; 
-      tail_length = _tail_length;
-      m_color = CRGB(random(100, 255), random(100, 255), random(100, 255));
+      m_num_leds = num_leds;
+      m_hsv = CHSV(random(0, 255), 255, 255);
+
+      m_tail_length = tail_length;
   }
 
-  void _update(){
-    head_idx = head_idx > (m_num_leds + tail_length) ? 0 : head_idx + 1;
+  void update(){
+    m_head_idx = (m_head_idx + 1) >= (m_num_leds - 1) ? 0 : m_head_idx + 1;
   }
   
   void draw() override{
-    int fade_scale = 255/(tail_length);
-    int fade_step = 0;
+    m_leds[m_head_idx] = m_hsv;
 
-    // color randomization    
-    // if (head_idx == 0) {
-    //   color = CRGB(random(0, 2)*255, random(0, 2)*255, random(0, 2)*255);
-    // }
-
-    for (int curr_idx = head_idx; curr_idx > (head_idx - (tail_length));  curr_idx--){
-      if (curr_idx == head_idx && within_bounds(curr_idx, m_num_leds)){
-        m_leds[curr_idx] = m_color;
-      }
-
-      else if (within_bounds(curr_idx, m_num_leds)){
-        m_leds[curr_idx].subtractFromRGB(fade_scale);
-      }
-      fade_step++;
+    for (int i = 1; i < m_tail_length; i++) {
+      int current_pos = m_head_idx - i;
+      if (current_pos >= 0 && current_pos <= m_head_idx - 1)
+        m_leds[current_pos] = m_hsv;
     }
-    
-    if (within_bounds(head_idx - tail_length, m_num_leds)){
-      m_leds[head_idx - tail_length] = CRGB(0, 0, 0);
-    }
-    _update();
+    int tail_delete = (m_head_idx - m_tail_length) < 0 ? m_num_leds + (m_head_idx - m_tail_length) :  (m_head_idx - m_tail_length);
+    m_leds[tail_delete] = CHSV(0,0,0);
+    update();
   }
 
 private:  
-  int head_idx;
-  int tail_length;
-  int start_pos;
+  int m_head_idx{0};
+  int m_tail_length;
+  int m_start_pos;
+  uint8_t m_hue;
+  uint8_t m_value {255};
 };
