@@ -5,7 +5,7 @@
 // lighting object that alternates between a list of colors
 class Pulse : public LightObjectPattern{
 public:
-  Pulse(CRGB* leds, int num_leds, CHSV hsv) {
+  Pulse(CRGB* leds, int num_leds, CHSV   hsv) {
     m_hsv = hsv;
     m_leds = leds;
     m_num_leds = num_leds;

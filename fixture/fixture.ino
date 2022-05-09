@@ -1,18 +1,30 @@
 #include "resources.h"
 #include "fixture.h"
 //#include "lfo.h"
-#include "patterns/huewash.h"
-#include "patterns/pulse.h"
-#include "patterns/singlepixel.h"
-#include "patterns/snake.h"
+//#include "patterns/huewash.h"
+#include "patterns/monowash.h"
+//#include "patterns/randhuewash.h"
+//#include "patterns/monorandwash.h"
+//#include "patterns/pulse.h"
+//#include "patterns/singlepixel.h"
+//#include "patterns/snake.h"
+//#include "patterns/two_side_fill.h"
 
 // vector of all lighting objects
 std::vector<LightObjectPattern*> light_objs;
 
 // initalize panels and lighting objects for this fixture
-CRGB object1_leds[NUM_LEDS_FIXTURE1];
-LightObjectPattern* light_obj1 = new SinglePixel(object1_leds, NUM_LEDS_FIXTURE1, CHSV_AQUA);
+CRGB object1_leds[LEDS_3FTFIXTURE ];
+//LightObjectPattern* light_obj1 = new HueWash(object1_leds, LEDS_3FTFIXTURE);
+LightObjectPattern* light_obj1 = new MonoWash(object1_leds, LEDS_3FTFIXTURE, 0, 255, 255, 10);
 
+//CRGB object2_leds[LEDS_4FTFIXTURE];
+//LightObjectPattern* light_obj2 = new Pulse(object2_leds, LEDS_4FTFIXTURE, CHSV_GREEN);
+
+//CRGB object3_leds[LEDS_6FTFIXTURE ];
+//LightObjectPattern* light_obj3 = new MonoWash(object3_leds, LEDS_6FTFIXTURE, 0, 255, 255, 10);
+//CRGB object2_leds[LEDS_4FTFIXTURE ];
+//LightObjectPattern* light_obj2 = new HueWash(object2_leds, LEDS_4FTFIXTURE);
 
 FixtureManager fixture;
   
@@ -22,9 +34,15 @@ void setup() {
    
   // initalize all data pins and led arrays for each fixture,
   // push lighting objects onto global vector
-  FastLED.addLeds<WS2812B, DATA_PIN_LIGHTOBJ5, GRB>(object1_leds, NUM_LEDS_FIXTURE1);  
+  FastLED.addLeds<WS2812B, DATA_PIN_LIGHTOBJ5, GRB>(object1_leds, LEDS_3FTFIXTURE);
+//  FastLED.addLeds<WS2812B, DATA_PIN_LIGHTOBJ6, GRB>(object2_leds, LEDS_4FTFIXTURE);
+//  FastLED.addLeds<WS2812B, DATA_PIN_LIGHTOBJ6, GRB>(object3_leds, LEDS_6FTFIXTURE);
+
+//  FastLED.addLeds<WS2812B, DATA_PIN_LIGHTOBJ7, GRB>(object2_leds, LEDS_4FTFIXTURE);    
 
   light_objs.push_back(light_obj1);
+//  light_objs.push_back(light_obj2);
+//  light_objs.push_back(light_obj3);
  
   fixture = FixtureManager(light_objs);    
   
@@ -59,7 +77,7 @@ void OSCMsgReceive(){
 }
 
 void color_mode(OSCMessage& msg) {
-  fixture.update_hsv(CHSV(msg.getInt(0), msg.getInt(1), msg.getInt(2)));
+    fixture.update_hsv(msg.getInt(0), msg.getInt(1), msg.getInt(2), msg.getInt(2));
 }
 
 void serialEvent() {
@@ -67,7 +85,7 @@ void serialEvent() {
 }
 
 void loop() { 
-  EVERY_N_MILLISECONDS(15){
+  EVERY_N_MILLISECONDS(20){
     fixture.draw();
   }
 }

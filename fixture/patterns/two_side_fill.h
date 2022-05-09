@@ -1,5 +1,6 @@
 #ifndef TWO_SIDE_FILL_H
 #define TWO_SIDE_FILL_H
+#endif
 
 // lighting object that alternates between 2 colors
 class TwoSideFill : public LightObjectPattern{

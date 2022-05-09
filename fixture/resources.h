@@ -34,9 +34,10 @@ SLIPEncodedSerial SLIPSerial(Serial);
 #define DATA_PIN_LIGHTOBJ13 13
 
 // number of LEDs corresponding to the fixtures data pin
-#define NUM_LEDS_FIXTURE1 60
-
-// delay in MS this is just for testing, no delay should 
+#define LEDS_3FTFIXTURE 68
+#define LEDS_4FTFIXTURE 96
+#define LEDS_6FTFIXTURE 148
+// delay in MS this is just zfor testing, no delay should 
 // be set durning a real performance 
 #define BOARD_DELAY 400
 
@@ -55,6 +56,7 @@ CHSV CHSV_AQUA = CHSV(128, 255, 255);
 CHSV CHSV_BLUE = CHSV(160, 255, 255);
 CHSV CHSV_PURPLE = CHSV(192, 255, 255);
 CHSV CHSV_PINK = CHSV(224, 255, 255);
+CHSV CHSV_OFF = CHSV(0, 255, 0);
 
 std::vector<CHSV> CHSV_TESTV{CHSV_ORANGE, 
                              CHSV_YELLOW, 
